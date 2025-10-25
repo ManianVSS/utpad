@@ -1,0 +1,22 @@
+<html>
+<head>
+    <title>
+        {{config_site_name}}
+    </title>
+    {% load static %}
+    <link rel="icon" href="{% static 'raven.png' %}" type="image/x-icon">
+</head>
+<body>
+<h1>Welcome to {{config_site_name}}</h1>
+<br/><b><u> General links:</u> </b>
+<br/>click on <a href="{{base_url}}/admin">this link</a> for admin site.
+<br/>click on <a href="{{base_url}}/swagger">this link</a> for swagger.
+<br/>click on <a href="{{base_url}}/api">this link</a> for general browsable API.
+
+
+<br/>
+<br/><b><u>Module links:</u> </b>
+<br/>click on <a href="{{base_url}}/capacity/api">this link</a> for capacity module browsable API.
+<br/>click on <a href="{{base_url}}/execution/api">this link</a> for work items module browsable API.
+</body>
+</html>

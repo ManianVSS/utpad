@@ -1,0 +1,3 @@
+create database utpad;
+create user utpadadmin with encrypted password 'utpadadmin@123';
+grant all privileges on database utpad to utpadadmin;

@@ -1,0 +1,27 @@
+# Production Settings
+
+# Logger Configuration
+LOG_FILE: logs/utpad-server.log
+LOG_LEVEL: DEBUG
+
+# Set DEBUG to True to allow static file serving
+DEBUG: True
+
+# Domain settings
+FQDN: '*'
+ALLOWED_HOSTS:
+  - '*'
+
+# Static and data file config
+TEMPLATE_DIRS: [ 'dist', 'templates']
+DATA_MOUNT_DIR: .
+FORCE_SCRIPT_NAME: ''
+STATIC_FILES: [ 'static', 'dist/assets', ]
+STATIC_URLS: [ '/static/', '/assets/' ]
+MEDIA_URL: /data/
+
+# Language and timezone settings
+LANGUAGE_CODE: en-us
+USE_I18N: False
+USE_TZ: True
+TIME_ZONE: 'Asia/Kolkata'

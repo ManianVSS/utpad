@@ -1,0 +1,7 @@
+#!/bin/bash
+sudo -u postgres psql -c "create database utpad"
+sudo -u postgres psql -c "create user utpadadmin with encrypted password 'utpadadmin@123'"
+sudo -u postgres psql -c "grant all privileges on database utpad to utpadadmin"
+sudo -u postgres psql -c "grant postgres to utpadadmin"
+
+./migrate.sh
