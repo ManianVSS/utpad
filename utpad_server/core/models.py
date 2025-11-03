@@ -63,6 +63,9 @@ class BaseModel(models.Model):
         return self.is_owner(user)
 
     def get_list_query_set(self, user):
+        # If user is none or anonymous, no access to any BaseModel derived objects
+        if user is None or user.is_anonymous:
+            return self.objects.none()
         return self.objects.all()
 
 
@@ -75,7 +78,7 @@ base_model_base_fields = [
 ]
 
 
-class UserMode(BaseModel):
+class UserModel(BaseModel):
     class Meta:
         abstract = True
 
@@ -190,6 +193,9 @@ class OrgGroup(BaseModel):
 
         if user is not None:
             if user.is_superuser:
+                return self.objects.all()
+            # If user has ci_integration_read permission, return all objects
+            if user.has_perm('core.tool_integration_read'):
                 return self.objects.all()
             elif user.is_anonymous:
                 return self.objects.filter(Q(published='True') & Q(is_public='True')).distinct()
@@ -336,6 +342,9 @@ class OrgModel(BaseModel):
     def get_list_query_set(self, user):
         if user is not None:
             if user.is_superuser:
+                return self.objects.all()
+            # If user has ci_integration_read permission, return all objects
+            if user.has_perm('core.tool_integration_read'):
                 return self.objects.all()
             elif user.is_anonymous:
                 return self.objects.filter(

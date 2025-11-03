@@ -71,6 +71,10 @@ class ServerOrgGroupObjectLevelPermission(DjangoModelPermissions):
         if getattr(view, '_ignore_model_permissions', False):
             return True
 
+        # If request is read only, allow as the queryset will be filtered by model's get_list_query_set
+        if request.method in ('HEAD', 'OPTIONS', 'GET'):
+            return True
+
         base_permission = super().has_permission(request, view)
 
         match request.method:
@@ -88,6 +92,8 @@ class ServerOrgGroupObjectLevelPermission(DjangoModelPermissions):
         if (user is None) or user.is_superuser:
             return super().has_object_permission(request, view, obj)
 
+        is_anonymous_request = not request.user or not request.user.is_authenticated or request.user.is_anonymous
+
         # User needs to have base permission if not super-user
         base_permission = super().has_permission(request, view) and super().has_object_permission(request, view, obj)
 
@@ -101,6 +107,10 @@ class ServerOrgGroupObjectLevelPermission(DjangoModelPermissions):
                 case 'POST':
                     return request.user.has_perm('core.tool_integration_write') or base_permission
                 case 'GET':
+                    # For anonymous requests, only allow if model's can_read allows it
+                    if is_anonymous_request:
+                        return hasattr(model_cls, 'can_read') and model_cls.can_read(obj, request.user)
+
                     return request.user.has_perm('core.tool_integration_read') or (base_permission and (
                             not hasattr(model_cls, 'can_read') or model_cls.can_read(obj, request.user)))
                 case 'PUT' | "PATCH":
